@@ -1,0 +1,54 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  # Also allow manual runs so we can trigger a release without tagging.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release as (e.g. v0.1.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Upload the committed evocli.exe to VirusTotal. The scan URL
+      # (the web UI link, not just the raw analysis result) is exposed
+      # on steps.vt.outputs.analysis and pasted into the release notes.
+      - name: Scan evocli.exe with VirusTotal
+        id: vt
+        uses: crazy-max/ghaction-virustotal@v4
+        with:
+          vt_api_key: ${{ secrets.VIRUSTOTAL_API_KEY }}
+          files: evocli.exe
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          files: evocli.exe
+          generate_release_notes: true
+          body: |
+            ## VirusTotal scan
+
+            ${{ steps.vt.outputs.analysis }}
+
+            ## Download
+
+            [`evocli.exe`](https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.tag }}/evocli.exe)

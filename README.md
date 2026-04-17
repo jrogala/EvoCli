@@ -1,13 +1,31 @@
 # EvoCli
 
+[![Latest release](https://img.shields.io/github/v/release/jrogala/EvoCli?label=latest&color=blue)](https://github.com/jrogala/EvoCli/releases/latest)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-latest%20scan-5c5c5c?logo=virustotal)](https://github.com/jrogala/EvoCli/releases/latest)
+[![Release workflow](https://github.com/jrogala/EvoCli/actions/workflows/release.yml/badge.svg)](https://github.com/jrogala/EvoCli/actions/workflows/release.yml)
+
 A command-line launcher for the Assetto Corsa EVO dedicated server.
 
 Does the same job as the official `ServerLauncher.exe` GUI, but as a scriptable CLI so you can run the server from a service, CI, or a shell loop.
 
+## Download
+
+Grab the latest `evocli.exe` from the **[Releases page](https://github.com/jrogala/EvoCli/releases/latest)**. Each release's notes contain the VirusTotal scan link for the binary attached to that release.
+
+Direct link to the most recent build:
+
+    https://github.com/jrogala/EvoCli/releases/latest/download/evocli.exe
+
+Or from PowerShell:
+
+```powershell
+Invoke-WebRequest -Uri https://github.com/jrogala/EvoCli/releases/latest/download/evocli.exe -OutFile evocli.exe
+```
+
 ## Quick start
 
 1. **Install the dedicated server** from Steam: "Assetto Corsa EVO Dedicated Server". Note the install folder — typically `C:\Program Files (x86)\Steam\steamapps\common\Assetto Corsa EVO Dedicated Server`.
-2. **Download `evocli.exe`** (Windows amd64) and drop it anywhere.
+2. **Download `evocli.exe`** (Windows amd64) — see the section above.
 3. **Launch a practice server on Monza GP**:
    ```
    evocli -folder "C:\Program Files (x86)\Steam\steamapps\common\Assetto Corsa EVO Dedicated Server" -track "Monza" -layout "GP" -server_name "My Server"
